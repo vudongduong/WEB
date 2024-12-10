@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    #total-price, 
+    #cart-container, 
+    #profile-confirmation-modal, 
+    #thank-you-message {
+       background-color: #ffffff;
+       border-radius: 10px;
+       padding: 20px;
+       margin: 10px auto;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       max-width: 800px;
+    }
+    p {
+       color: #333;
+    } 
+    body{
+       color: black;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1></h1>
+            <a href="products.html">Products</a>
+            <a href="profiles.html">Profile</a>
+        </nav>
+    </header>
+    <div id="cart-items"></div>
+    <div id="cart-container">
+    </div>
+    <p id="total-price"> </p>
+    <button id="checkout-cart">Payment</button>
+    <div id="profile-confirmation-modal" style="display: none;">
+        <h2>Profile Confirmation</h2>
+        <div id="profile-info"></div>
+        <p><strong>Purchase Date:</strong> <span id="purchase-date"></span></p>
+        <p>Are you sure you want to proceed with the payment?</p>
+        <button id="confirm-payment">Yes</button>
+        <button id="cancel-payment">No</button>
+    </div>
+    <div id="thank-you-message" style="display: none;">
+        <h2>Thank You For Your Purchase!</h2>
+        <p>Your order has been successfully processed. We appreciate your business!</p>
+    </div>
+    <script>
+    function renderCart() {
+    const cartContainer = document.getElementById('cart-container');
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartContainer.innerHTML = '';
+    cartItemsContainer.innerHTML = '';
+    totalPriceElement.textContent = '';
+    if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+        totalPriceElement.style.display = "none";
+        return;
+    }
+    let totalPrice = 0;
+    cart.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+            <p>${item.name} - ${item.price} VND</p>
+            <button onclick="removeItem(${index})">Delete</button>
+        `;
+        cartContainer.appendChild(itemDiv);
+        totalPrice += item.price;
+    });
+    totalPriceElement.textContent = `Total price: ${totalPrice} VND`;
+    totalPriceElement.style.display = "block";
+}
+    function removeItem(index) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+    }
+    function checkoutCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+        showProfileAndConfirm();
+    }
+function showProfileAndConfirm() {
+    const profile = JSON.parse(localStorage.getItem('profile'));
+    if (!profile) {
+        alert("Please fill out your profile first.");
+        window.location.href = "profiles.html";
+        return;
+    }
+    const profileInfo = document.getElementById("profile-info");
+    const purchaseDate = document.getElementById("purchase-date");
+    profileInfo.innerHTML = `
+        <p><strong>Name:</strong> ${profile.fullName}</p>
+        <p><strong>Email:</strong> ${profile.email}</p>
+        <p><strong>Phone:</strong> ${profile.phone}</p>
+    `;
+    const currentDate = new Date().toLocaleDateString();
+    purchaseDate.textContent = currentDate;
+    document.getElementById("profile-confirmation-modal").style.display = "block";
+}
+document.getElementById("confirm-payment").addEventListener("click", function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    alert(`Payment successful! Total amount: ${total} VND`);
+    localStorage.removeItem('cart');
+    document.getElementById("profile-confirmation-modal").style.display = "none";
+    document.getElementById("thank-you-message").style.display = "block";
+    document.getElementById("cart-container").style.display = "none";
+    document.getElementById("checkout-cart").style.display = "none";
+    document.getElementById("total-price").style.display = "none";
+    document.getElementById("cart-items").style.display = "none";
+});
+    document.getElementById("cancel-payment").addEventListener("click", function() {
+        document.getElementById("profile-confirmation-modal").style.display = "none";
+    });
+    document.getElementById('checkout-cart').addEventListener('click', checkoutCart);
+    renderCart();
+    </script>
+</body>
+</html>

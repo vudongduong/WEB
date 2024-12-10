@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Products - Land for Sale</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        p{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1></h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="cart.html">️Cart</a>
+            <a href="contact.html">Contact</a>
+            <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        </nav>
+    </header>
+    <section class="products">
+        <div>
+            <div class="filter-section">
+                <h2>Price Filter</h2>
+                <form id="price-filter-form">
+                    <label for="min-price">Min Price (million VND):</label>
+                    <input type="number" id="min-price" name="minPrice" placeholder="">
+                    <br>
+                    <label for="max-price">Max Price (million VND):</label>
+                    <input type="number" id="max-price" name="maxPrice" placeholder="">
+                    <br>
+                    <button type="button" onclick="filterProducts()">Apply Filter</button>
+                </form>
+            </div>
+            <div class="products">
+                <h1></h1>
+                <div class="product-gallery" id="product-gallery">
+                </div>
+            </div>
+        </div>
+        <script>
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                alert("You must be logged in to access this page.");
+                window.location.href = "login.html"; 
+            }
+            function logout() {
+                localStorage.setItem("isLoggedIn", "false"); 
+                alert("Logged out successfully!");
+                window.location.href = "login.html";
+            }
+        </script>
+        <script>
+            const products = [
+                { id: 1, name: "Land for House 1", price: 500, img: "images/land1.jpg", category: "house" },
+                { id: 2, name: "Land for House 2", price: 700, img: "images/land2.jpg", category: "house" },
+                { id: 3, name: "Land for House 3", price: 1000, img: "images/land3.jpg", category: "house" },
+                { id: 4, name: "Land for Projects 1", price: 800, img: "images/land4.jpg", category: "project" },
+                { id: 5, name: "Land for Projects 3", price: 900, img: "images/land5.jpg", category: "project" },
+                { id: 6, name: "Land for Projects 2", price: 1200, img: "images/land6.jpg", category: "project" },
+                { id: 7, name: "Land for Playground 1", price: 600, img: "images/land7.jpg", category: "playground" },
+                { id: 8, name: "Land for Playground 2", price: 750, img: "images/land8.jpg", category: "playground" },
+                { id: 9, name: "Land for Playground 3", price: 1000, img: "images/land9.jpg", category: "playground" },
+                { id: 10, name: "Land for House 4", price: 750, img: "images/land10.jpg", category: "house" },
+                { id: 11, name: "Land for House 5", price: 650, img: "images/land11.jpg", category: "house" },
+                { id: 12, name: "Land for House 6", price: 1200, img: "images/land12.jpg", category: "house" },
+                { id: 13, name: "Land for House 7", price: 1000, img: "images/land13.jpg", category: "house" },
+                { id: 14, name: "Land for Projects 4", price: 1500, img: "images/land14.jpg", category: "house" },
+                { id: 15, name: "Land for Playground 4", price: 3000, img: "images/land15.jpg", category: "house" },
+                { id: 16, name: "Land for Factory 1", price: 3500, img: "images/land16.jpg", category: "house" },
+                { id: 17, name: "Land for House 8", price: 1300, img: "images/land17.jpg", category: "house" },
+                { id: 18, name: "Land for Factory 2", price: 5000, img: "images/land18.jpg", category: "house" },
+                { id: 19, name: "Land for Factory 3", price: 1100, img: "images/land19.jpg", category: "house" },
+                { id: 20, name: "Land for House 9", price: 1250, img: "images/land20.jpg", category: "house" },
+                { id: 21, name: "Land for Playground 10", price: 2000, img: "images/land21.jpg", category: "house" },
+                { id: 22, name: "Land for House 11", price: 2150, img: "images/land22.jpg", category: "house" },
+            ];
+            function displayProducts(filteredProducts) {
+                const gallery = document.getElementById("product-gallery");
+                gallery.innerHTML = "";
+    
+                if (filteredProducts.length === 0) {
+                    gallery.innerHTML = "<p>No products found for the selected price range.</p>";
+                    return;
+                }
+                filteredProducts.forEach(product => {
+                    const productHTML = `
+                        <div class="product-item">
+                            <a href="land-detail.html?id=${product.id}">
+                                <img src="${product.img}" alt="${product.name}">
+                            </a>
+                            <p>${product.name}</p>
+                            <p>Price: ${product.price} million VND</p>
+                        </div>
+                    `;
+                    gallery.innerHTML += productHTML;
+                });
+            }
+            function filterProducts() {
+                const minPrice = parseInt(document.getElementById("min-price").value) || 0;
+                const maxPrice = parseInt(document.getElementById("max-price").value) || Infinity;
+    
+                const filteredProducts = products.filter(product => product.price >= minPrice && product.price <= maxPrice);
+                displayProducts(filteredProducts);
+            }
+            displayProducts(products);
+            function logout() {
+                localStorage.setItem("isLoggedIn", "false"); 
+                alert("Logged out successfully!");
+                window.location.href = "index.html";
+            }
+        </script>
+    </section>
+</body>
+</html>

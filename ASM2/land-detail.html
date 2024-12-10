@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Đất</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1></h1>
+            <a href="cart.html">️Cart</a>
+            <a href="products.html">Products</a>
+        </nav>
+    </header>
+    <div class="land-detail">
+        <h1 id="land-name">Land name</h1>
+        <img id="land-image" src="" alt="Hình ảnh đất" style="width: 100%; max-width: 400px;">
+        <p id="land-price">Price: </p>
+        <p id="land-size">Size: </p>
+        <button onclick="addToCart()">Add to Cart</button>
+        <style>
+            #land-name {
+                color: #0e0e0e;
+                font-weight: bold;
+                font-size: 1.8em;
+            }
+            p{
+                color:#0e0e0e;
+            }
+        </style>
+    </div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            
+        }
+        header {
+            background-color: #101011;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            
+        }
+        nav a {
+            color: #ee0c1f;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .land-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            
+        }
+        #land-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        #land-name {
+            color: #0e0e0e;
+            font-weight: bold;
+            font-size: 1.8em;
+            margin-top: 20px;
+        }
+        .land-info {
+            margin-top: 15px;
+            text-align: left;
+            font-size: 1.2em;
+            
+        }
+        button {
+            background-color: #6da5de;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
+    </style>
+    <script>
+        const landData = [
+            { id: 1, name: "Land for House Construction 1", price: 500000000, size: "100m²", image: "images/land1.jpg" },
+            { id: 2, name: "Land for House Construction 2", price: 700000000, size: "250m²", image: "images/land2.jpg" },
+            { id: 3, name: "Land for House Construction 3", price: 1000000000, size: "300m²", image: "images/land3.jpg" },
+            { id: 4, name: "Land for Construction Projects 1", price: 800000000, size: "1000m²", image: "images/land4.jpg" },
+            { id: 5, name: "Land for Construction Projects 2", price: 900000000, size: "1250m²", image: "images/land5.jpg" },
+            { id: 6, name: "Land for Construction Projects 3", price: 1200000000, size: "2000m²", image: "images/land6.jpg" },
+            { id: 7, name: "Land for Playground Construction 1", price: 600000000, size: "3000m²", image: "images/land7.jpg" },
+            { id: 8, name: "Land for Playground Construction 2", price: 750000000, size: "3500m²", image: "images/land8.jpg" },
+            { id: 9, name: "Land for Playground Construction 3", price: 1000000000, size: "2500m²", image: "images/land9.jpg" },
+            { id: 10, name: "Land for House Construction 4", price: 750000000, size: "400m²", image: "images/land10.jpg" },
+            { id: 11, name: "Land for House Construction 5", price: 650000000, size: "350m²", image: "images/land11.jpg" },
+            { id: 12, name: "Land for House Construction 6", price: 1200000000, size: "450m²", image: "images/land12.jpg" },
+            { id: 13, name: "Land for House Construction 7", price: 1000000000, size: "350m²", image: "images/land13.jpg" },
+            { id: 14, name: "Land for Construction Projects 4", price: 1500000000, size: "650m²", image: "images/land14.jpg" },
+            { id: 15, name: "Land for Playground Construction 4", price: 3000000000, size: "1500m²", image: "images/land15.jpg" },
+            { id: 16, name: "Land for factory construction 1", price: 3500000000, size: "1750m²", image: "images/land16.jpg" },
+            { id: 17, name: "Land for House Construction 8", price: 1300000000, size: "1000m²", image: "images/land17.jpg" },
+            { id: 18, name: "Land for factory construction 2", price: 5000000000, size: "2000m²", image: "images/land18.jpg" },
+            { id: 19, name: "Land for factory construction 3", price: 1100000000, size: "1050m²", image: "images/land19.jpg" },
+            { id: 20, name: "Land for House Construction 9", price: 1250000000, size: "1250m²", image: "images/land20.jpg" },
+            { id: 21, name: "Land for Playground Construction 10", price: 2000000000, size: "1450m²", image: "images/land21.jpg" },
+            { id: 22, name: "Land for House Construction 11", price: 2150000000, size: "1550m²", image: "images/land22.jpg" },  
+        ];
+        const urlParams = new URLSearchParams(window.location.search);
+        const landId = parseInt(urlParams.get('id'), 10);
+        const land = landData.find(l => l.id === landId);
+        if (land) {
+            document.getElementById("land-name").textContent = land.name;
+            document.getElementById("land-price").textContent = `Giá: ${land.price.toLocaleString()} VND`;
+            document.getElementById("land-image").src = land.image;
+        } else {
+            document.querySelector(".land-detail").innerHTML = "<p>No information found for this land.</p>";
+        }
+        function addToCart() {
+            if (land) {
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.push(land);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert("Added to ️🛒!");
+            }
+        }
+        if (land) {
+    document.getElementById("land-name").textContent = land.name;
+    document.getElementById("land-price").textContent = `Price: ${land.price.toLocaleString()} VND`;
+    document.getElementById("land-size").textContent = `Size: ${land.size}`;
+    document.getElementById("land-image").src = land.image;
+} else {
+    document.querySelector(".land-detail").innerHTML = "<p>No information found for this land.</p>";
+}
+    </script>
+</body>
+</html>
